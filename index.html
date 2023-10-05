@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://kit.fontawesome.com/eabac940d1.js" crossorigin="anonymous"></script>
+</head>
+
+<body onload="fetchdata(event)">
+
+    <main>
+        <div class="img-container">
+            <img alt="" id="img">
+        </div>
+
+        <h1 id="name"></h1>
+        <p><span id="followers"></span> Followers</p>
+
+        <div class="repo-container">
+            <h2>Repositories</h2>
+            <div class="repos" id="repos">
+            </div>
+        </div>
+
+    </main>
+
+</body>
+
+<script>
+    function fetchdata(event) {
+        event.preventDefault()
+        username = "Edwinliby"
+        repos.innerHTML = ""
+        fetch(`https://api.github.com/users/${username}`)
+            .then((res) => res.json())
+            .then((data) => {
+                console.log(data);
+                document.getElementById("name").innerText = data.name;
+                img.src = data.avatar_url;
+                followers.innerText = data.followers
+
+            });
+
+
+        fetch(`https://api.github.com/users/${username}/repos`)
+            .then((res) => res.json())
+            .then((data) => {
+                console.log(data);
+                data.forEach((repo) => {
+                    const repoCard = document.createElement("div");
+                    repoCard.classList.add("repo");
+                    repoCard.innerHTML = `
+                          <h2>${repo.name}</h2>
+                          <div class="star-fork-container">
+                          <h3 ><i class="fa-regular fa-star"></i> ${repo.stargazers_count} </h3>
+                          <h3><i class="fa-solid fa-code-fork"></i> ${repo.forks_count}</h3>
+                      </div>
+                      <a href="https://github.com/${username}/${repo.name}">View on Github</a>
+                      </div>`;
+
+                    repos.appendChild(repoCard);
+                });
+            });
+    }
+
+</script>
+
+</html>
